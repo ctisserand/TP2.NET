@@ -19,9 +19,14 @@ namespace Gauniv.WebServer.Controllers
         private readonly ApplicationDbContext applicationDbContext = applicationDbContext;
         private readonly UserManager<User> userManager = userManager;
 
+        private readonly ApplicationDbContext _context = applicationDbContext;
+
         public IActionResult Index()
         {
-            return View(new List<Game> { new() { Id = 0 } });
+            // Retrieve the list of games from the database
+            List<Game> games = _context.Games.ToList();
+
+            return View(games);
         }
 
 

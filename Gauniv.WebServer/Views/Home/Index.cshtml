@@ -5,19 +5,30 @@
     ViewData["Title"] = "View";
 }
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-<h1>View</h1>
+<h1>Games List</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
-    <tbody>
-@foreach (var item in Model) {
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price ($)</th>
         </tr>
-}
+    </thead>
+    <tbody>
+        @foreach (var game in Model)
+        {
+            <tr>
+                <td>@game.Id</td>
+                <td>@game.Name</td>
+                <td>@game.Description</td>
+                <td>@game.price</td>
+            </tr>
+        }
     </tbody>
 </table>
