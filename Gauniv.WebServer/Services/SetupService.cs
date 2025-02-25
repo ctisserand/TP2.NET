@@ -35,8 +35,6 @@ namespace Gauniv.WebServer.Services
                     applicationDbContext.Database.Migrate();
                 }
 
-                new User().
-
                 // Ajouter ici les données que vous insérer dans votre DB au démarrage
 
                 return Task.CompletedTask;
