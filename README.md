@@ -93,9 +93,11 @@ Votre solution devra être basée sur le projet **Library.sln**.
 
 #### Modèle de données
 
-- [ ]  Stocker une liste des jeux accessibles.
-- [ ]  Stocker une liste des jeux achetés par les utilisateurs.
-- [ ]  Stocker une liste de genres (catégories) pour caractériser les jeux.
+#### POUR FAIRE LA MIGRATION FAIRE Add-Migration <nom-de-la-migration> à chaque modification du modèle de donnée.
+
+- [x]  Stocker une liste des jeux accessibles.
+- [x]  Stocker une liste des jeux achetés par les utilisateurs.
+- [x]  Stocker une liste de genres (catégories) pour caractériser les jeux.
 
 Sachant que :
 
