@@ -1,257 +1,192 @@
-# Plateforme de distribution de contenu + Editeur
+
+# Plateforme de distribution de contenu + Éditeur
 
 ## But
 
-Construire un web service avec son client Windows pour gérer une plateforme de distribution de contenu limitée aux jeux vidéo. 
-
-Ajouter à celui-ci un jeu multijoueur comprenant le serveur ainsi que le jeu correspondant.t
+- Construire un web service avec son client Windows pour gérer une plateforme de distribution de contenu limitée aux jeux vidéo.
+-  Ajouter à celui-ci un jeu multijoueur comprenant le serveur ainsi que le jeu correspondant.
 
 ## A rendre
 
-Un web service de stockage et de gestion des jeux en ligne.
+-  Un web service de stockage et de gestion des jeux en ligne.
+-  Un logiciel sous Windows pour parcourir les jeux, en télécharger un et jouer à celui-ci.
+-  Un serveur de jeu orchestrant le fonctionnement d’au moins un jeu.
+- Une application permettant de jouer à un jeu.
 
-Un logiciel sous Windows pour parcourir les jeux, en télécharger un et jouer à celui-ci.
+## Contrainte
 
-Un serveur de jeu orchestrant le fonctionnement d’au moins un jeu.
-
-Une application permettant de jouer à un jeu.
-
-# Contrainte
-
-Langages autorisés : C#, HTML, Javascript, CSS, TypeScript
-
-Serveur web : ASP.Net Core
-
-Logiciel Windows : WPF
-
-Serveur de jeux : C#
-
-Jeu : C# avec Godot, Unity, Winform, WPF, MAUI, ...
+- Langages autorisés : C#, HTML, JavaScript, CSS, TypeScript
+- Serveur web : ASP.Net Core
+-  Logiciel Windows : WPF
+- Serveur de jeux : C#
+-  Jeu : C# avec Godot, Unity, Winform, WPF, MAUI, etc.
 
 ## Projet de départ
 
-Votre solution devra être basée sur le projet Library.sln.
+Votre solution devra être basée sur le projet **Library.sln**.
 
-La partie serveur est dans le projet Gauniv.WebServer.
+- La partie serveur est dans le projet **Gauniv.WebServer**.
+-  La partie client est dans le projet **Gauniv.Client**.
+-  La connexion entre votre client et votre serveur est dans le projet **Gauniv.Network**.
+-  Vous devrez créer deux projets supplémentaires :
+  -  **Gauniv.GameServer** pour le serveur de jeu.
+  -  **Gauniv.Game** pour le jeu lui-même.
 
-La partie client est dans le projet Gauniv.Client.
+## Aide
 
-La connexion entre votre client et votre serveur est dans le projet Gauniv.Network.
+### Base de données
 
-Vous devrez créer les deux projets pour le serveur de jeu et le jeu lui-même.
+- Pour des informations sur Entity Framework, consultez : [EF Core Migrations](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=vs)
 
-Le serveur de jeu devra se nommer Gauniv.GameServer.
+### MAUI – Gesture
 
-Le jeu devra se nommer Gauniv.Game.
+-  Pour les éléments qui prennent en charge l'évènement click, utilisez :
+  ```xml
+  <Button Clicked="" />
+  ```
+-  Pour les éléments qui ne le supportent pas, utilisez les Gesture :
+  ```xml
+  <Label>
+      <Label.GestureRecognizers>
+          <TapGestureRecognizer Command="{Binding AppearingCommand}" />
+      </Label.GestureRecognizers>
+  </Label>
+  ```
 
-# Aide
+### MAUI – Évènement
 
-## Base de données
+-  Pour transmettre un évènement depuis une View vers un ViewModel, utilisez par exemple :
+  ```xml
+  <Label>
+      <Label.Behaviors>
+          <toolkit:EventToCommandBehavior EventName="Focused"
+                                          Command="{Binding FocusedCommand}"
+                                          x:TypeArguments="FocusedEventArgs" />
+      </Label.Behaviors>
+  </Label>
+  ```
+- N'oubliez pas d'ajouter le namespace approprié pour CommunityToolkit.
 
-Pour des informations sur le fonctionnement d’Entity Framework : <https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=vs>
+### DTO
 
-## MAUI – Gesture
+-  Pour renvoyer un objet différent de celui contenu dans votre BDD, vous pouvez :
+  - Créer votre DTO à la main (voir [ce tutoriel](https://learn.microsoft.com/en-us/aspnet/web-api/overview/data/using-web-api-with-entity-framework/part-5))
+  - Ou utiliser la librairie [AutoMapper](https://automapper.org/)
 
-Pour les éléments ne prenant pas en charge l’évènement click
+### Entity Framework
 
-```xml
-<Button Clicked="" />
-```
+-  Pour récupérer les catégories avec les jeux, utilisez la méthode `Include` :
+  ```csharp
+  appDbContext.Games.Include(g => g.Categories).Where(x => x.Price > 0);
+  ```
+- Ou activez le Lazy Loading.
 
-Vous pouvez utiliser les Gesture
+## Développement
 
-```xml
-<Label>
-    <Label.GestureRecognizers>
-        <TapGestureRecognizer Command="{Binding AppearingCommand}">
-    </Label.Behaviors>
-</Label>
-```
+-  Injecter des données de test dans la base de données.
+-  Avant d'utiliser des requêtes HTTP depuis le client, créez une interface avec des données statiques.
+- Pour tester le téléchargement d'un jeu, utilisez temporairement un fichier texte à ouvrir avec votre éditeur par défaut.
 
-## MAUI – Evènement
+## Fonctionnalités attendues
 
-Si vous avez besoin de transmettre un évènement depuis une View vers un ModelView vous pouvez utiliser un tag fournit par la librairie CommunityToolkit
+### Web Service (Plateforme de distribution)
 
-Ex :
+#### Modèle de données
 
-```xml
-<Label Focused="xxx">
-```
-
-Ajouter ce namespace :
-
-```xml
-<xxx 
-    xmlns:toolkit=http://schemas.microsoft.com/dotnet/2022/maui/toolkit>
-</xxx>
-```
-
-Vous pouvez alors utiliser le tag suivant :
-```xml
-<Label>
-    <Label.Behaviors>
-        <toolkit:EventToCommandBehavior EventName="Focused"
-            Command="{Binding FocusedCommand}"
-            x:TypeArguments="FocusedEventArgs" />
-    </Label.Behaviors>
-</Label>
-```
-## DTO
-Pour renvoyer un objet différent de celui contenu dans votre base utiliser un DTO
- - Vous fait votre DTO à la main: https://learn.microsoft.com/en-us/aspnet/web-api/overview/data/using-web-api-with-entity-framework/part-5
- - Vous utiliser la librairie AutoMapper: https://automapper.org/
-
-## Entity Framewrok
-Si vous obtenez un objet null lors de la lecture d'une liaison d'un objet stocké en BDD
-ex : `appDbContext.Games.Categories.Where() => Categories is null`
-
-Pour que Entity Framework retourne les categories avec les jeux :
- - Utilisez la méthode Include : `appDbContext.Games.Include(b => b.Categories).Where(x => x.Price > 0)`
- - Utiliser le LazyLoading
-            https://learn.microsoft.com/en-us/ef/ef6/querying/related-data
-
-
-## Devellopement
-
-Il peut être plus facile dans un premier temps de tester les différents logiciels séparément :
-
-- Injecter des données de test dans la BDD.
-- Avant de faire des requêtes HTTP depuis le client, créer votre interface grâce à des données statiques.
-- Au lieu de charger un vrai binaire, utiliser un fichier texte que vous ouvrez avec votre éditeur par défaut.
-
-# Fonctionnalité attendue
-
-## Livrable
-
-- Un serveur web contenant: 
-  - Une interface d'administration
-  - Une API REST
-- Un client lourd permettant: 
-  - La consultation des jeux
-  - Le téléchargement de jeux
-  - Le lancement de jeux
-- Un serveur autonome de jeu
-- Un jeu
-
-# Plateforme de distribution de contenu (ASP.NET)
-
-## Modèle de données
-
-Stocker un ensemble de jeux consistant en :
- - Une liste des jeux accessibles
- - Une liste des jeux achetés
- - Une liste de genres permettant de caractériser les jeux
+- [ ]  Stocker une liste des jeux accessibles.
+- [ ]  Stocker une liste des jeux achetés par les utilisateurs.
+- [ ]  Stocker une liste de genres (catégories) pour caractériser les jeux.
 
 Sachant que :
 
-- Un jeu contient au minimum :
-  - Un Id
-  - Un nom
-  - Une description
-  - Un payload (binaire du jeu)
-  - Un prix
-  - Des catégories (Un jeu peut avoir plusieurs catégories)
+- **Un jeu** contient au minimum :
+  - [ ]  Un Id
+  - [ ]  Un nom
+  - [ ]  Une description
+  - [ ]  Un payload (binaire du jeu)
+  - [ ]  Un prix
+  - [ ]  Des catégories (un jeu peut avoir plusieurs catégories)
 
-- Un utilisateur contient au minimum :
-  - Un Id
-  - Un nom
-  - Un prénom
-  - Une liste des jeux achetées
+- **Un utilisateur** contient au minimum :
+  - [ ]  Un Id
+  - [ ]  Un nom
+  - [ ]  Un prénom
+  - [ ]  Une liste des jeux achetés
 
-## administration
+#### Administration
 
-Un administrateur doit pouvoir :
- - Ajouter des jeux
- - Supprimer des jeux
- - Modifier un jeu
- - Ajouter de nouvelles catégories
- - Modifier une catégorie
- - Supprimer une catégorie
+-  Un administrateur peut :
+  - [ ]  Ajouter des jeux
+  - [ ]  Supprimer des jeux
+  - [ ]  Modifier un jeu
+  - [ ]  Ajouter de nouvelles catégories
+  - [ ]  Modifier une catégorie
+  - [ ]  Supprimer une catégorie
 
-Un utilisateur doit pouvoir :
- - Consulter la liste des jeux possédés
- - Acheter un nouveau jeu
- - Voir les jeux possédés
- - Consulter la liste des autres joueurs inscrits et leurs statuts en temps réel
+-  Un utilisateur peut :
+  - [ ]  Consulter la liste des jeux possédés
+  - [ ]  Acheter un nouveau jeu
+  - [ ]  Voir les jeux possédés
+  - [ ]  Consulter la liste des autres joueurs inscrits et leurs statuts en temps réel
 
-Tout le monde peut :
- - Consulter la liste de tous les jeux
-   - Filtrer par nom / prix / catégorie / possédé / taille
- - Consulter la liste de toutes les catégories
+-  Tout le monde peut :
+  - [ ]  Consulter la liste de tous les jeux (avec filtrage par nom, prix, catégorie, etc.)
+  - [ ]  Consulter la liste de toutes les catégories
 
-### Options
+#### API REST
 
-- Afficher des filtres dans la liste des jeux pour filtrer par catégorie / prix / possédé.
-- Une page affichant les statistiques sur :
-  - Le nombre total de jeux disponibles
-  - Le nombre de jeux par catégorie
-  - Le nombre moyen de jeux joués par compte
-  - Le temps moyen joué par jeu
-  - Le maximum de joueurs en simultané sur la plateforme et par jeu
-- Un jeu pouvant faire plusieurs Gio, il est nécessaire de pouvoir les stocker sur autre chose qu’une base de données classique. Trouver et mettre en place un mécanisme pour stocker les jeux hors de la BDD.
-- En suivant le même principe, il est nécessaire de ne pas stocker l’ensemble du fichier en mémoire avant de l’envoyer. Streamer le binaire en direct pour réduire l’empreinte mémoire de votre serveur.
+L'API doit permettre :
 
-Au lieu d’afficher la liste de tous les joueurs, faites en sorte que chaque joueur ait une liste d’amis.
+- [ ]  S'authentifier
+- [ ]  Récupérer le binaire d'un jeu et le copier localement (sans charger l'ensemble du fichier en mémoire)
+- [ ]  Lister les catégories disponibles
+- [ ]  Lister les jeux (avec support des filtres et de la pagination)
+  - Exemple d'URL : `/game`, `/game?offset=10&limit=15`, `/game?category=3`, etc.
+- [ ]  Lister les jeux possédés (pour les utilisateurs connectés, avec filtres et pagination)
 
-## API
+### Application Client (WPF, MAUI ou WINUI)
 
-Une API REST doit être mise à disposition pour permettre à des clients externes de consulter la librairie.
+- [ ]  Lister les jeux avec pagination (scroll infini, bouton, etc.)
+- [ ]  Filtrer les jeux par catégorie, prix, etc.
+- [ ]  Afficher les détails d'un jeu (nom, description, statut, catégories)
+- [ ]  Télécharger, supprimer et lancer un jeu
+  - [ ]  Masquer les boutons "jouer" et "supprimer" si le jeu n'est pas téléchargé
+  - [ ]  Masquer le bouton "télécharger" si le jeu est déjà disponible
+- [ ]  Jouer à un jeu
+  - [ ]  Afficher l'état du jeu (non téléchargé, prêt, en jeu, etc.)
+  - [ ]  Contrôler le jeu (lancement, arrêt forcé, etc.)
+- [ ]  Voir et mettre à jour le profil de l'utilisateur (dossier d'installation, identifiants, etc.)
 
-Cette API doit permettre de :
+### Serveur de jeu
 
-- S’authentifier
-- Récupérer le binaire d’un jeu et le copier localement (/ ! \\ Un jeu pouvant faire plusieurs Gio, il est impensable de stocker l’ensemble du binaire en mémoire)
-- Lister les catégories disponibles (tout le monde)
-- Lister les jeux (incluant filtre + pagination) (tout le monde)
-  - `/game`
-  - `/game?offset=10&limit=15`
-  - `/game?category=3`
-  - `/game?category[]=3&category[]=4`
-  - `/game?offset=10&limit=15&category[]=3`
-  - `/game?offset=10&limit=15&category[]=3&category[]=2`
-- Lister les jeux possédés (incluant filtre + pagination) (joueur connecté uniquement)
-  - `/game`
-  - `/game?offset=10&limit=15`
-  - `/game?category=3`
-  - `/game?category[]=3&category[]=4`
-  - `/game?offset=10&limit=15&category[]=3`
-  - `/game?offset=10&limit=15&category[]=3&category[]=2`
+- [ ]  Orchestrer le fonctionnement d'au moins un jeu.
+- [ ]  Assurer la communication entre les joueurs et le serveur via TCP.
+- [ ]  Implémenter les règles et le déroulement d'une partie (par exemple, gestion du temps de réaction, vérification d'éligibilité, etc.)
 
-La liste des jeux et la liste de mes jeux peuvent être factorisées en une seule API.
+### Jeu
 
+- [ ]  Fournir une application permettant de jouer (avec interface graphique et contrôles).
+- [ ]  Gérer l'authentification et la sélection des joueurs.
+- [ ]  Intégrer les mécanismes de lancement, arrêt, et contrôle du jeu.
 
-# Application (WPF, MAUI, WINUI)
+## Options et améliorations
 
-L’application doit pouvoir permettre de :
+- [ ]  Ajouter des filtres dans la liste des jeux (catégorie, prix, etc.).
+- [ ]  Créer une page de statistiques sur :
+  - [ ]  Le nombre total de jeux disponibles.
+  - [ ]  Le nombre de jeux par catégorie.
+  - [ ]  Le nombre moyen de jeux joués par compte.
+  - [ ]  Le temps moyen joué par jeu.
+  - [ ]  Le maximum de joueurs en simultané sur la plateforme et par jeu.
+- [ ]  Mettre en place un mécanisme pour stocker les jeux hors de la base de données (si nécessaire).
+- [ ]  Implémenter le streaming du binaire pour réduire l’empreinte mémoire.
+- [ ]  Permettre à chaque joueur de gérer une liste d'amis.
 
-- Lister les jeux (vous pouvez définir la limite comme bon vous semble)
-  - Incluant la pagination (scroll infini, bouton ou autres)
-  - Filtrer par jeux possédés / catégorie / prix / …
-- Lister les jeux possédés par le joueur (vous pouvez définir la limite comme bon vous semble)
-  - Incluant la pagination (scroll infini, bouton ou autres)
-  - Filtrer par jeux possédés / catégorie / prix / …
-- Afficher les détails d’un jeu (nom, description, statuts, catégories)
-- Télécharger, supprimer et lancer un jeu
-  - L’utilisateur ne devra pas voir les boutons "jouer" et "supprimer" si le jeu n’a pas été téléchargé
-  - De même, le bouton "télécharger" ne sera pas visible si le jeu est déjà disponible
-- Jouer à un jeu
-  - Visualiser l’état du jeu (non téléchargé, prêt, en jeu, …)
-  - Contrôler le jeu (lancement, arrêt forcé, …)
-- Voir et mettre à jour son profil d’application (dossier d’installation, identifiants, …)
+```
 
-L’ensemble des données concernant les jeux devra provenir du serveur.
+---
 
-
-## Options
-
-- Afficher la description avec un formatage : style de police, couleur, taille du texte, ...
-  - Penser au RTF, HTML, PDF, ...
-  - Dans un premier temps, gérez uniquement un format. Si vous avez fini, vous pouvez gérer plusieurs formats en même temps
-- Lire la description grâce à l'API [System.Speech.SpeechSynthesizer](https://learn.microsoft.com/en-us/dotnet/api/system.speech.synthesis.speechsynthesizer?view=net-9.0)
-  - Gérer la lecture / l'arrêt / la pause / la reprise
-  - Changer les boutons de contrôle en fonction de l'état de la lecture (comme un lecteur vidéo, ex : YouTube)
-  - Commencer à lire à partir de la sélection de l'utilisateur. L'utilisateur doit pouvoir faire un clic droit sur un mot et lancer la lecture à partir de ce mot
-
+Ce README avec des cases à cocher vous permet de valider chaque étape du développement au fur et à mesure de l'avancement du projet. Vous pouvez le modifier ou l'étendre selon vos besoins.
 # OPTIONNEL :
 # Serveur de jeu (Console)
 
