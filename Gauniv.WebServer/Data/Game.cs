@@ -27,8 +27,11 @@ namespace Gauniv.WebServer.Data
         // Relation many-to-many avec Category (classe imbriquée)
         public ICollection<Category> Categories { get; set; } = new List<Category>();
 
-        // Classe imbriquée Category
-        public class Category
+        // Facultatif : liste des utilisateurs ayant acheté ce jeu
+        public ICollection<User> PurchasedByUsers { get; set; } = new List<User>();
+
+    // Classe imbriquée Category
+    public class Category
         {
             [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
             [Key]
