@@ -252,7 +252,7 @@ L’ensemble des données concernant les jeux devra provenir du serveur.
   - Changer les boutons de contrôle en fonction de l'état de la lecture (comme un lecteur vidéo, ex : YouTube)
   - Commencer à lire à partir de la sélection de l'utilisateur. L'utilisateur doit pouvoir faire un clic droit sur un mot et lancer la lecture à partir de ce mot
 
-
+# OPTIONNEL :
 # Serveur de jeu (Console)
 
 Le serveur est une application console qui coordonne tous les joueurs.
