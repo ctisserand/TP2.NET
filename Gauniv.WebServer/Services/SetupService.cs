@@ -36,6 +36,10 @@ namespace Gauniv.WebServer.Services
                 }
 
                 // Ajouter ici les données que vous insérer dans votre DB au démarrage
+                applicationDbContext.Games.Add(new Game { Name = "Counter Strike", Description = "War game 5v5 with guns and russians", price = 19.99F });
+                applicationDbContext.Games.Add(new Game { Name = "League of Legends", Description = "5v5 face to face game with champions to destroy nexus", price = 4.99F });
+                applicationDbContext.Games.Add(new Game { Name = "Rocket League", Description = "Car and football fusion to make this game", price = 9.99F });
+                applicationDbContext.SaveChanges();
 
                 return Task.CompletedTask;
             }
