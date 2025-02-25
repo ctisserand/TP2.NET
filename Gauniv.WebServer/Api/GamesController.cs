@@ -21,4 +21,5 @@ namespace Gauniv.WebServer.Api
         private readonly IMapper mapper = mapper;
         private readonly UserManager<User> userManager = userManager;
     }
+
 }
