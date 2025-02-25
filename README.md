@@ -100,18 +100,18 @@ Votre solution devra être basée sur le projet **Library.sln**.
 Sachant que :
 
 - **Un jeu** contient au minimum :
-  - [ ]  Un Id
-  - [ ]  Un nom
-  - [ ]  Une description
-  - [ ]  Un payload (binaire du jeu)
-  - [ ]  Un prix
-  - [ ]  Des catégories (un jeu peut avoir plusieurs catégories)
+  - [x]  Un Id
+  - [x]  Un nom
+  - [x]  Une description
+  - [x]  Un payload (binaire du jeu)
+  - [x]  Un prix
+  - [x]  Des catégories (un jeu peut avoir plusieurs catégories)
 
 - **Un utilisateur** contient au minimum :
-  - [ ]  Un Id
-  - [ ]  Un nom
-  - [ ]  Un prénom
-  - [ ]  Une liste des jeux achetés
+  - [x]  Un Id
+  - [x]  Un nom
+  - [x]  Un prénom
+  - [x]  Une liste des jeux achetés
 
 #### Administration
 
