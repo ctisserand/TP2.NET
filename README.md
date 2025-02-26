@@ -121,9 +121,9 @@ Sachant que :
   - [ ]  Ajouter des jeux
   - [ ]  Supprimer des jeux
   - [ ]  Modifier un jeu
-  - [ ]  Ajouter de nouvelles catégories
-  - [ ]  Modifier une catégorie
-  - [ ]  Supprimer une catégorie
+  - [x]  Ajouter de nouvelles catégories
+  - [x]  Modifier une catégorie
+  - [x]  Supprimer une catégorie
 
 -  Un utilisateur peut :
   - [ ]  Consulter la liste des jeux possédés
