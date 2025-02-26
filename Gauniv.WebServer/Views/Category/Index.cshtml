@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Gauniv.WebServer.Data.Game.Category>
+
+@{
+    ViewData["Title"] = "Liste des catégories";
+}
+
+<h1>Liste des catégories</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Créer une nouvelle catégorie</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Modifier</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Supprimer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

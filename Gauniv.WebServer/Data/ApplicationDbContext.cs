@@ -11,5 +11,7 @@ namespace Gauniv.WebServer.Data
         {
         }
         public DbSet<Game> Games { get; set; }
+
+        public DbSet<Game.Category> Categories { get; set; }
     }
 }
