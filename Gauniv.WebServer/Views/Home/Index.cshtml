@@ -1,34 +1,29 @@
-﻿@model List<Gauniv.WebServer.Data.Game>
+﻿@model IndexViewModel
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 @{
     ViewData["Title"] = "View";
 }
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="~/css/game-display.css" rel="stylesheet" type="text/css"/>
 <h1>Games List</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
+<p class="create-game-button">
+    <a asp-controller="Game" asp-action="CreateGame" class="btn btn-primary">Create New</a>
 </p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price ($)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var game in Model)
-        {
-            <tr>
-                <td>@game.Id</td>
-                <td>@game.Name</td>
-                <td>@game.Description</td>
-                <td>@game.price</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="game-grid">
+    @foreach (var game in Model.Games)
+    {
+        <div class="game-card">
+            <div class="game-header">
+                <span class="game-id">#@game.Id</span>
+                <h2 class="game-name">@game.Name</h2>
+            </div>
+            <p class="game-description">@game.Description</p>
+            <div class="price-container">
+                $@game.Price
+            </div>
+        </div>
+    }
+</div>

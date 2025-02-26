@@ -13,8 +13,8 @@ namespace Gauniv.WebServer.Data
         public String? Description { get; set; }
 
         [Column(TypeName = "bytea")] 
-        public byte[]? payload { get; set; }
-        public float price { get; set; }
+        public byte[]? Payload { get; set; }
+        public float Price { get; set; }
 
         //TODO : Add categories fields
     }

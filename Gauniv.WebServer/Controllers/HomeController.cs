@@ -26,7 +26,7 @@ namespace Gauniv.WebServer.Controllers
             // Retrieve the list of games from the database
             List<Game> games = _context.Games.ToList();
 
-            return View(games);
+            return View(new IndexViewModel { Games = games });
         }
 
 
