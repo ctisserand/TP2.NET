@@ -20,9 +20,13 @@ namespace Gauniv.WebServer.Controllers
         private readonly ApplicationDbContext applicationDbContext = applicationDbContext;
         private readonly UserManager<User> userManager = userManager;
 
-        public IActionResult Index()
+
+
+
+        public async Task<IActionResult> Index()
         {
-            return View(new List<Game> { new() { Id = 0 } });
+            var games = await applicationDbContext.Games.Include(g => g.Categories).ToListAsync();
+            return View(games);
         }
 
 
@@ -47,5 +51,6 @@ namespace Gauniv.WebServer.Controllers
             var games = await _context.Games.Include(g => g.Categories).ToListAsync();
             return View(games);
         }
+
     }
 }
