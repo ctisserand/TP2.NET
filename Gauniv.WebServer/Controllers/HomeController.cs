@@ -23,10 +23,29 @@ namespace Gauniv.WebServer.Controllers
 
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            var games = await applicationDbContext.Games.Include(g => g.Categories).ToListAsync();
-            return View(games);
+            ViewData["CurrentSort"] = sortOrder;
+
+            var games = applicationDbContext.Games.Include(g => g.Categories).AsQueryable();
+
+            switch (sortOrder)
+            {
+                case "name_asc":
+                    games = games.OrderBy(g => g.Name);
+                    break;
+                case "name_desc":
+                    games = games.OrderByDescending(g => g.Name);
+                    break;
+                case "price_asc":
+                    games = games.OrderBy(g => g.Price);
+                    break;
+                case "price_desc":
+                    games = games.OrderByDescending(g => g.Price);
+                    break;
+            }
+
+            return View(await games.ToListAsync());
         }
 
 
@@ -35,6 +54,8 @@ namespace Gauniv.WebServer.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
     }
 
     public class GamesController : Controller

@@ -3,6 +3,9 @@
 @using X.PagedList;
 @{
     ViewData["Title"] = "Liste des Jeux";
+    string currentSort = ViewData["CurrentSort"] as string;
+    string nameSort = currentSort == "name_asc" ? "name_desc" : "name_asc";
+    string priceSort = currentSort == "price_asc" ? "price_desc" : "price_asc";
 }
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
@@ -16,9 +19,17 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Nom</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@nameSort">
+                    Nom @(currentSort == "name_asc" ? "▲" : (currentSort == "name_desc" ? "▼" : ""))
+                </a>
+            </th>
             <th>Description</th>
-            <th>Prix</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@priceSort">
+                    Prix @(currentSort == "price_asc" ? "▲" : (currentSort == "price_desc" ? "▼" : ""))
+                </a>
+            </th>
             <th>Catégories</th>
         </tr>
     </thead>
