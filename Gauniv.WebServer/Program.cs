@@ -90,6 +90,14 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+app.MapControllerRoute(
+    name: "admin",
+    pattern: "{controller=AdminPanel}/{action=AdminIndex}/{id?}")
+    .WithStaticAssets();
+
+
+
+
 app.MapRazorPages()
    .WithStaticAssets();
 
