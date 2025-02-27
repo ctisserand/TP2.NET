@@ -12,7 +12,6 @@
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <h1>Nouveautés et tendances</h1>
-<a asp-controller="Category" asp-action="See" class="btn btn-secondary">Voir les catégories</a>
 <p>
     <a asp-controller="Category" asp-action="See" class="btn btn-secondary">Voir les catégories</a>
     <button id="openFilter" class="btn btn-primary">Filtrer</button>
@@ -20,32 +19,6 @@
 
 <!-- Ajout de la sidebar -->
 <partial name="_FilterSidebar" />
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@nameSort">
-                    Nom @(currentSort == "name_asc" ? "▲" : (currentSort == "name_desc" ? "▼" : ""))
-                </a>
-            </th>
-            <th>Description</th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@priceSort">
-                    Prix @(currentSort == "price_asc" ? "▲" : (currentSort == "price_desc" ? "▼" : ""))
-                </a>
-            </th>
-            <th>Catégories</th>
-            <th>Acheter</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var game in Model)
-        {
-            <tr>
-                <td>@game.Name</td>
-                <td>@game.Description</td>
-                <td>@game.Price €</td>
-                <td>
 <div class="game-list">
 
     @foreach (var game in Model)
@@ -108,40 +81,6 @@
     }
 </div>
                 
-                        @string.Join(", ", game.Categories.Select(c => c.Name))
-                    }
-                    else
-                    {
-                        <span>Aucune catégorie</span>
-                    }
-                </td>
-                <td>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        if (userPurchasedGames.Contains(game.Id))
-                        {
-                            <span>✅ Acheté</span>
-                        }
-                        else
-                        {
-                            <form asp-action="Purchase" asp-controller="Home" method="post">
-                                <input type="hidden" name="gameId" value="@game.Id" />
-                                <button type="submit" class="btn btn-success">Acheter</button>
-                            </form>
-                        }
-                    }
-                    else
-                    {
-                        <span>🔒 Connectez-vous pour acheter</span>
-                    }
-                </td>
-
-            </tr>
-        }
-    </tbody>
-</table>
-
-
 <script>
     document.getElementById("openFilter").addEventListener("click", function() {
         let sidebar = document.getElementById("filterSidebar");
