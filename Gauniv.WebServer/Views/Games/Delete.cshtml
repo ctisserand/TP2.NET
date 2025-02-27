@@ -1,0 +1,20 @@
+﻿@model Gauniv.WebServer.Data.Game
+
+@{
+    ViewData["Title"] = "Supprimer le jeu";
+}
+
+<h1>Supprimer le jeu</h1>
+
+<h3>Êtes-vous sûr de vouloir supprimer ce jeu ?</h3>
+<div>
+    <h4>@Model.Name</h4>
+    <p>@Model.Description</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+</form>

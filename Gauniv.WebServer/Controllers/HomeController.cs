@@ -99,20 +99,5 @@ namespace Gauniv.WebServer.Controllers
 
     }
 
-    public class GamesController : Controller
-    {
-        private readonly ApplicationDbContext _context;
-
-        public GamesController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var games = await _context.Games.Include(g => g.Categories).ToListAsync();
-            return View(games);
-        }
-
-    }
+   
 }

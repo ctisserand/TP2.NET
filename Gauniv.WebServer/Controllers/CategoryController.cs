@@ -113,5 +113,16 @@ namespace Gauniv.WebServer.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AutocompleteCategories(string term)
+        {
+            var categories = await _context.Categories
+                .Where(c => c.Name.Contains(term))
+                .Select(c => c.Name)
+                .Distinct()
+                .ToListAsync();
+            return Json(categories);
+        }
     }
 }
