@@ -2,20 +2,46 @@
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 @{
-    ViewData["Title"] = "Liste des Jeux";
+    ViewData["Title"] = "Nouveautés et tendances";
     string currentSort = ViewData["CurrentSort"] as string;
     string nameSort = currentSort == "name_asc" ? "name_desc" : "name_asc";
     string priceSort = currentSort == "price_asc" ? "price_desc" : "price_asc";
     var userPurchasedGames = ViewData["PurchasedGames"] as List<int> ?? new List<int>();
 }
 
+
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-<h1>Liste des Jeux</h1>
+<h1>Nouveautés et tendances</h1>
 
 <p>
     <a asp-controller="Category" asp-action="See" class="btn btn-secondary">Voir les catégories</a>
 </p>
+<div class="game-list">
+    @foreach (var game in Model)
+    {
+        <div class="game-box">
+            <!-- Image du jeu -->
+            <div class="game-image">
+                <!-- Si vous avez un champ "ImageUrl" ou "CoverUrl" dans votre modèle, utilisez-le ici -->
+                <img src="~/images/no_image_available.png" alt="Image du jeu" />
+            </div>
 
+            <!-- Infos principales -->
+            <div class="game-info">
+                <h3 class="game-title">@game.Name</h3>
+                <p class="game-description">@game.Description</p>
+
+                <!-- Exemples de promo ou date de sortie (optionnel) -->
+                <!-- <div class="game-discount">-40%</div>
+                <div class="game-release-date">Sortie le 17 fév. 2025</div> -->
+                <!-- Catégories -->
+                <div class="game-categories">
+                    @if (game.Categories != null && game.Categories.Any())
+                    {
+                        foreach (var cat in game.Categories)
+                        {
+                            <span>@cat.Name</span>
+                        }
 
 <table class="table">
     <thead>
@@ -52,6 +78,16 @@
                     {
                         <span>Aucune catégorie</span>
                     }
+                </div>
+            </div>
+
+            <!-- Prix -->
+            <div class="game-price-container">
+                <p class="game-price">@game.Price €</p>
+            </div>
+        </div>
+    }
+</div>
                 </td>
                 <td>
                     @if (User.Identity.IsAuthenticated)
