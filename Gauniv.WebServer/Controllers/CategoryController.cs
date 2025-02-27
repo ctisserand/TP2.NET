@@ -22,11 +22,19 @@ namespace Gauniv.WebServer.Controllers
             return View(categories);
         }
 
+        public async Task<IActionResult> See()
+        {
+            var categories = await _context.Categories.ToListAsync();
+            return View(categories);
+        }
+
         // GET: Category/Create
         public IActionResult Create()
         {
             return View();
         }
+
+        
 
         // POST: Category/Create
         [HttpPost]

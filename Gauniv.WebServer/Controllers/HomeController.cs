@@ -28,6 +28,18 @@ namespace Gauniv.WebServer.Controllers
             ViewData["CurrentSort"] = sortOrder;
 
             var games = applicationDbContext.Games.Include(g => g.Categories).AsQueryable();
+            var user = await userManager.GetUserAsync(User);
+
+            List<int> purchasedGames = new List<int>();
+
+            if (user != null)
+            {
+                purchasedGames = await applicationDbContext.Users
+                    .Where(u => u.Id == user.Id)
+                    .SelectMany(u => u.PurchasedGames)
+                    .Select(g => g.Id)
+                    .ToListAsync();
+            }
 
             switch (sortOrder)
             {
@@ -45,8 +57,37 @@ namespace Gauniv.WebServer.Controllers
                     break;
             }
 
+
+            ViewData["PurchasedGames"] = purchasedGames;
             return View(await games.ToListAsync());
         }
+
+        [HttpPost]
+        [Authorize] // Seuls les utilisateurs connectés peuvent acheter
+        public async Task<IActionResult> Purchase(int gameId)
+        {
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var game = await applicationDbContext.Games.FindAsync(gameId);
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            // Vérifie si l'utilisateur possède déjà le jeu
+            if (!user.PurchasedGames.Any(g => g.Id == gameId))
+            {
+                user.PurchasedGames.Add(game);
+                await applicationDbContext.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

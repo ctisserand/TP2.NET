@@ -95,6 +95,17 @@ app.MapControllerRoute(
     pattern: "{controller=AdminPanel}/{action=AdminIndex}/{id?}")
     .WithStaticAssets();
 
+app.MapControllerRoute(
+    name: "SeeCategory",
+    pattern: "{controller=Category}/{action=See}/{id?}")
+    .WithStaticAssets();
+
+app.MapControllerRoute(
+    name: "Lybrary",
+    pattern: "{controller=Lybrary}/{action=LybraryIndex}/{id?}")
+    .WithStaticAssets();
+
+
 
 
 

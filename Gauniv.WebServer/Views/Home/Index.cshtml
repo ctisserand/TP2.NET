@@ -6,15 +6,14 @@
     string currentSort = ViewData["CurrentSort"] as string;
     string nameSort = currentSort == "name_asc" ? "name_desc" : "name_asc";
     string priceSort = currentSort == "price_asc" ? "price_desc" : "price_asc";
+    var userPurchasedGames = ViewData["PurchasedGames"] as List<int> ?? new List<int>();
 }
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <h1>Liste des Jeux</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
-    <a asp-controller="Category" asp-action="Index" class="btn btn-secondary">Gérer les catégories</a>
-
+    <a asp-controller="Category" asp-action="See" class="btn btn-secondary">Voir les catégories</a>
 </p>
 
 
@@ -33,6 +32,7 @@
                 </a>
             </th>
             <th>Catégories</th>
+            <th>Acheter</th>
         </tr>
     </thead>
     <tbody>
@@ -53,6 +53,27 @@
                         <span>Aucune catégorie</span>
                     }
                 </td>
+                <td>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (userPurchasedGames.Contains(game.Id))
+                        {
+                            <span>✅ Acheté</span>
+                        }
+                        else
+                        {
+                            <form asp-action="Purchase" asp-controller="Home" method="post">
+                                <input type="hidden" name="gameId" value="@game.Id" />
+                                <button type="submit" class="btn btn-success">Acheter</button>
+                            </form>
+                        }
+                    }
+                    else
+                    {
+                        <span>🔒 Connectez-vous pour acheter</span>
+                    }
+                </td>
+
             </tr>
         }
     </tbody>
