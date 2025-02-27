@@ -13,7 +13,39 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <h1>Nouveautés et tendances</h1>
 <a asp-controller="Category" asp-action="See" class="btn btn-secondary">Voir les catégories</a>
+<p>
+    <a asp-controller="Category" asp-action="See" class="btn btn-secondary">Voir les catégories</a>
+    <button id="openFilter" class="btn btn-primary">Filtrer</button>
+</p>
 
+<!-- Ajout de la sidebar -->
+<partial name="_FilterSidebar" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@nameSort">
+                    Nom @(currentSort == "name_asc" ? "▲" : (currentSort == "name_desc" ? "▼" : ""))
+                </a>
+            </th>
+            <th>Description</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@priceSort">
+                    Prix @(currentSort == "price_asc" ? "▲" : (currentSort == "price_desc" ? "▼" : ""))
+                </a>
+            </th>
+            <th>Catégories</th>
+            <th>Acheter</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model)
+        {
+            <tr>
+                <td>@game.Name</td>
+                <td>@game.Description</td>
+                <td>@game.Price €</td>
+                <td>
 <div class="game-list">
 
     @foreach (var game in Model)
@@ -76,3 +108,85 @@
     }
 </div>
                 
+                        @string.Join(", ", game.Categories.Select(c => c.Name))
+                    }
+                    else
+                    {
+                        <span>Aucune catégorie</span>
+                    }
+                </td>
+                <td>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (userPurchasedGames.Contains(game.Id))
+                        {
+                            <span>✅ Acheté</span>
+                        }
+                        else
+                        {
+                            <form asp-action="Purchase" asp-controller="Home" method="post">
+                                <input type="hidden" name="gameId" value="@game.Id" />
+                                <button type="submit" class="btn btn-success">Acheter</button>
+                            </form>
+                        }
+                    }
+                    else
+                    {
+                        <span>🔒 Connectez-vous pour acheter</span>
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+    document.getElementById("openFilter").addEventListener("click", function() {
+        let sidebar = document.getElementById("filterSidebar");
+        if (sidebar.classList.contains("open")) {
+            sidebar.classList.remove("open"); // Ferme la sidebar si elle est ouverte
+        } else {
+            sidebar.classList.add("open"); // Ouvre la sidebar si elle est fermée
+        }
+    });
+
+    document.getElementById("closeFilter").addEventListener("click", function() {
+        document.getElementById("filterSidebar").classList.remove("open");
+    });
+
+       document.getElementById("filterForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let params = new URLSearchParams();
+        let name = document.getElementById("nameFilter").value;
+        let minPrice = document.getElementById("minPrice").value;
+        let maxPrice = document.getElementById("maxPrice").value;
+        let categoryFilter = document.getElementById("categoryFilter");
+        let selectedCategories = Array.from(categoryFilter.selectedOptions).map(option => option.value);
+
+        if (name) params.append("name", name);
+        if (minPrice) params.append("minPrice", minPrice);
+        if (maxPrice) params.append("maxPrice", maxPrice);
+       if (selectedCategories.length > 0) {
+            selectedCategories.forEach(category => params.append("category", category));
+        }
+        window.location.href = "/Home/Index?" + params.toString();
+    });
+</script>
+<script>
+    function adjustSidebarHeight() {
+        var headerHeight = document.querySelector("header").offsetHeight;
+        var footerHeight = document.querySelector("footer").offsetHeight;
+        var sidebar = document.getElementById("filterSidebar");
+
+        sidebar.style.top = headerHeight + "px";
+        sidebar.style.height = `calc(100vh - ${headerHeight + footerHeight}px)`;
+    }
+
+    window.addEventListener("load", adjustSidebarHeight);
+    window.addEventListener("resize", adjustSidebarHeight);
+</script>
+
+
