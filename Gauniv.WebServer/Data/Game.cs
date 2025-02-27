@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,7 +19,7 @@ namespace Gauniv.WebServer.Data
         public string Description { get; set; }
 
         [Required]
-        public byte[] Payload { get; set; } // Contenu binaire du jeu
+        public byte[] Payload { get; set; } 
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]

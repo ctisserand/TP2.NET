@@ -1,20 +1,15 @@
-﻿@model List<Gauniv.WebServer.Data.Game>
-@using X.PagedList.Mvc.Core;
-@using X.PagedList;
+﻿@model IEnumerable<Gauniv.WebServer.Data.Game>
+
 @{
     ViewData["Title"] = "Liste des Jeux";
 }
 
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <h1>Liste des Jeux</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
-    <a asp-controller="Category" asp-action="Index" class="btn btn-secondary">Gérer les catégories</a>
-    <a asp-controller="Games" asp-action="Index" class="btn btn-secondary">Gérer les jeux</a>
-
+    <a asp-action="Create" class="btn btn-primary">Ajouter un jeu</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Retour Accueil</a>
 </p>
-
 
 <table class="table">
     <thead>
@@ -23,10 +18,10 @@
             <th>Description</th>
             <th>Prix</th>
             <th>Catégories</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        <div>@Model.Count</div>
         @foreach (var game in Model)
         {
             <tr>
@@ -42,6 +37,10 @@
                     {
                         <span>Aucune catégorie</span>
                     }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@game.Id" class="btn btn-sm btn-warning">Modifier</a>
+                    <a asp-action="Delete" asp-route-id="@game.Id" class="btn btn-sm btn-danger">Supprimer</a>
                 </td>
             </tr>
         }
