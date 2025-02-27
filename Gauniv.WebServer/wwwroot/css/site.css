@@ -1,31 +1,210 @@
+/* =============================== */
+/*      RÈGLES EXISTANTES         */
+/* =============================== */
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
+/* Laisse un espace pour le footer si nécessaire */
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
+/* Gestion du placeholder pour .form-floating */
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    text-align: start;
 }
+
+
+/* =============================== */
+/*    STYLE SOMBRE «STEAM-LIKE»    */
+/* =============================== */
+
+/* Corps de la page */
+body {
+    background-color: #1b2838; /* Fond sombre, teinte Steam */
+    color: #c7d5e0; /* Couleur de texte gris-bleu clair */
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Barre de navigation (navbar) */
+.navbar {
+    background-color: #171a21 !important; /* Couleur sombre */
+    border-bottom: none !important;
+}
+
+    .navbar .navbar-brand,
+    .navbar .nav-link,
+    .navbar .nav-item .btn {
+        color: #c7d5e0 !important;
+    }
+
+        .navbar .navbar-brand:hover,
+        .navbar .nav-link:hover,
+        .navbar .nav-item .btn:hover {
+            color: #ffffff !important;
+        }
+
+/* Container principal (optionnel) */
+.container {
+    margin-top: 20px;
+}
+
+/* Boutons primaires */
+.btn-primary {
+    background-color: #2a475e;
+    border-color: #2a475e;
+}
+
+    .btn-primary:hover {
+        background-color: #3c5977;
+        border-color: #3c5977;
+    }
+
+/* Pied de page */
+.footer {
+    background-color: #171a21;
+    color: #c7d5e0;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Tables (ex. liste de jeux) */
+.table {
+    background-color: #2a475e;
+    border: none;
+}
+
+    .table thead th {
+        color: #fff;
+        border-bottom: 1px solid #4c6a89;
+    }
+
+    .table tbody td {
+        color: #c7d5e0;
+        border-bottom: 1px solid #4c6a89;
+    }
+
+    .table tbody tr:hover {
+        background-color: #1b2838;
+    }
+
+/* Liens */
+a {
+    color: #66c0f4;
+}
+
+    a:hover {
+        color: #ffffff;
+    }
+
+/* Container global pour la liste de jeux */
+.game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* espace vertical entre chaque jeu */
+}
+
+/* Chaque jeu est une box (row) */
+.game-box {
+    display: flex;
+    align-items: center;
+    background-color: #2a475e; /* fond bleu-gris style Steam */
+    border: 1px solid #4c6a89;
+    padding: 10px;
+}
+
+/* Image du jeu, fixez une taille pour rester homogène */
+.game-image img {
+    width: 80px; /* ajustez selon vos besoins */
+    height: auto;
+    margin-right: 10px;
+    border: 1px solid #1b2838;
+    background-color: #1b2838;
+}
+
+/* Partie centrale avec titre, description, etc. */
+.game-info {
+    flex: 1; /* prend la largeur restante */
+    margin-right: 10px;
+}
+
+.game-title {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin: 0;
+}
+
+.game-description {
+    color: #c7d5e0;
+    margin: 5px 0;
+    font-size: 0.9rem;
+    /* Limiter la hauteur si besoin
+       max-height: 40px;
+       overflow: hidden;
+    */
+}
+
+/* Catégories */
+.game-categories {
+    margin-top: 5px;
+}
+
+    .game-categories span {
+        background-color: #1b2838;
+        color: #c7d5e0;
+        padding: 3px 6px;
+        margin-right: 5px;
+        border-radius: 3px;
+        font-size: 0.8rem;
+    }
+
+/* Container pour le prix ou la promo */
+.game-price-container {
+    text-align: right;
+    min-width: 80px; /* largeur pour aligner */
+}
+
+/* Prix du jeu */
+.game-price {
+    color: #66c0f4; /* bleu clair Steam */
+    font-weight: bold;
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Exemple d'affichage promo */
+.game-discount {
+    background-color: #5c7e10;
+    color: #ffffff;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+

@@ -1,13 +1,16 @@
 ﻿using Gauniv.WebServer.Data;
 using Gauniv.WebServer.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gauniv.WebServer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class GamesController : Controller
     {
         private readonly ApplicationDbContext _context;
+
 
         public GamesController(ApplicationDbContext context)
         {
@@ -15,10 +18,29 @@ namespace Gauniv.WebServer.Controllers
         }
 
         // GET: Games
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            var games = await _context.Games.Include(g => g.Categories).ToListAsync();
-            return View(games);
+            ViewData["CurrentSort"] = sortOrder;
+
+            var games = _context.Games.Include(g => g.Categories).AsQueryable();
+
+            switch (sortOrder)
+            {
+                case "name_asc":
+                    games = games.OrderBy(g => g.Name);
+                    break;
+                case "name_desc":
+                    games = games.OrderByDescending(g => g.Name);
+                    break;
+                case "price_asc":
+                    games = games.OrderBy(g => g.Price);
+                    break;
+                case "price_desc":
+                    games = games.OrderByDescending(g => g.Price);
+                    break;
+            }
+
+            return View(await games.ToListAsync());
         }
 
         // GET: Games/Create

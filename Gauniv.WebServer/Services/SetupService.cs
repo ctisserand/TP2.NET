@@ -110,7 +110,7 @@ namespace Gauniv.WebServer.Services
                     };
 
                     if (!applicationDbContext.Roles.Any(r => r.Name == "Admin"))
-                    {
+                    {   
                         roleManager.CreateAsync(new IdentityRole("Admin")).Wait();
                     }
                     if (!applicationDbContext.Roles.Any(r => r.Name == "User"))
@@ -120,14 +120,26 @@ namespace Gauniv.WebServer.Services
 
                     foreach (var user in users)
                     {
-                        userManager.CreateAsync(user,"password").Wait();
-                        userManager.AddToRoleAsync(user, "User").Wait();
+                        Task.Run(async () =>
+                        {
+                            try
+                            {
+                            await userManager.CreateAsync(user, "password");
+                            await userManager.AddToRoleAsync(user, "User");
+
+                            }
+                            catch(Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+
+                        }).Wait();
                     }
                     
                     userManager.AddToRoleAsync(users[0], "Admin").Wait();
 
-                    applicationDbContext.Users.AddRange(users);
-                    applicationDbContext.SaveChanges();
+                    //applicationDbContext.Users.AddRange(users);
+                    //applicationDbContext.SaveChanges();
                 }
                 //var t0 = signinManager.PasswordSignInAsync("edward@example.com", "password", false, lockoutOnFailure: false);
                 //t0.Wait();

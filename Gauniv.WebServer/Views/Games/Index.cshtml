@@ -2,21 +2,33 @@
 
 @{
     ViewData["Title"] = "Liste des Jeux";
+    string currentSort = ViewData["CurrentSort"] as string;
+    string nameSort = currentSort == "name_asc" ? "name_desc" : "name_asc";
+    string priceSort = currentSort == "price_asc" ? "price_desc" : "price_asc";
 }
 
 <h1>Liste des Jeux</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Ajouter un jeu</a>
+    <a asp-controller="Category" asp-action="Index" class="btn btn-secondary">Gérer les catégories</a>
     <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Retour Accueil</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Nom</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@nameSort">
+                    Nom @(currentSort == "name_asc" ? "▲" : (currentSort == "name_desc" ? "▼" : ""))
+                </a>
+            </th>
             <th>Description</th>
-            <th>Prix</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@priceSort">
+                    Prix @(currentSort == "price_asc" ? "▲" : (currentSort == "price_desc" ? "▼" : ""))
+                </a>
+            </th>
             <th>Catégories</th>
             <th>Actions</th>
         </tr>
