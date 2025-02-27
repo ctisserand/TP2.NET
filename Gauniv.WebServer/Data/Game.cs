@@ -32,7 +32,7 @@ namespace Gauniv.WebServer.Data
         public ICollection<User> PurchasedByUsers { get; set; } = new List<User>();
 
     // Classe imbriquée Category
-    public class Category
+    public  class Category
         {
             [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
             [Key]

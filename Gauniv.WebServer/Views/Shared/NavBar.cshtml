@@ -14,9 +14,9 @@
                         <a class="nav-link" href="@Url.Action("Index", "Library")">Bibliothèque</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "Store")">Magasin</a>
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">Magasin</a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" style="display: @(User.Identity.IsAuthenticated ? "block" : "none");">
                         <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
                             Profil

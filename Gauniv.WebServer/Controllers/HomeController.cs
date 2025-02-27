@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using X.PagedList.Extensions;
+using static Gauniv.WebServer.Data.Game;
+using static Gauniv.WebServer.Data.Game.Category;
+
 
 
 namespace Gauniv.WebServer.Controllers
@@ -23,7 +26,7 @@ namespace Gauniv.WebServer.Controllers
 
 
 
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string name, decimal? minPrice, decimal? maxPrice, List<int> selectedCategories)
         {
             ViewData["CurrentSort"] = sortOrder;
 
@@ -31,6 +34,7 @@ namespace Gauniv.WebServer.Controllers
             var user = await userManager.GetUserAsync(User);
 
             List<int> purchasedGames = new List<int>();
+            List<Game.Category> allCategories = await applicationDbContext.Categories.ToListAsync();
 
             if (user != null)
             {
@@ -40,6 +44,29 @@ namespace Gauniv.WebServer.Controllers
                     .Select(g => g.Id)
                     .ToListAsync();
             }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                games = games.Where(g => g.Name.Contains(name));
+            }
+
+            if (minPrice.HasValue)
+            {
+                games = games.Where(g => g.Price >= minPrice);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                games = games.Where(g => g.Price <= maxPrice);
+            }
+
+            if (selectedCategories != null && selectedCategories.Any())
+            {
+                // Filtrage par catégories
+                games = games.Where(g => g.Categories.Any(c => selectedCategories.Contains(c.Id)));
+            }
+
+
 
             switch (sortOrder)
             {
@@ -57,8 +84,10 @@ namespace Gauniv.WebServer.Controllers
                     break;
             }
 
-
+            ViewData["Categories"] = allCategories;
             ViewData["PurchasedGames"] = purchasedGames;
+
+
             return View(await games.ToListAsync());
         }
 
