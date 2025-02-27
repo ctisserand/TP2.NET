@@ -12,11 +12,10 @@
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <h1>Nouveautés et tendances</h1>
+<a asp-controller="Category" asp-action="See" class="btn btn-secondary">Voir les catégories</a>
 
-<p>
-    <a asp-controller="Category" asp-action="See" class="btn btn-secondary">Voir les catégories</a>
-</p>
 <div class="game-list">
+
     @foreach (var game in Model)
     {
         <div class="game-box">
@@ -42,75 +41,38 @@
                         {
                             <span>@cat.Name</span>
                         }
+					}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@nameSort">
-                    Nom @(currentSort == "name_asc" ? "▲" : (currentSort == "name_desc" ? "▼" : ""))
-                </a>
-            </th>
-            <th>Description</th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@priceSort">
-                    Prix @(currentSort == "price_asc" ? "▲" : (currentSort == "price_desc" ? "▼" : ""))
-                </a>
-            </th>
-            <th>Catégories</th>
-            <th>Acheter</th>
-        </tr>
-    </thead>
-    <tbody>
-        <div>@Model.Count</div>
-        @foreach (var game in Model)
-        {
-            <tr>
-                <td>@game.Name</td>
-                <td>@game.Description</td>
-                <td>@game.Price €</td>
-                <td>
-                    @if (game.Categories != null && game.Categories.Any())
-                    {
-                        @string.Join(", ", game.Categories.Select(c => c.Name))
-                    }
-                    else
-                    {
-                        <span>Aucune catégorie</span>
-                    }
                 </div>
             </div>
-
             <!-- Prix -->
             <div class="game-price-container">
                 <p class="game-price">@game.Price €</p>
-            </div>
-        </div>
-    }
-</div>
-                </td>
-                <td>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        if (userPurchasedGames.Contains(game.Id))
+					<span>Aucune catégorie</span>
+
+                    <div class="game-purchase-container">
+
+                        @if (User.Identity.IsAuthenticated)
                         {
-                            <span>✅ Acheté</span>
+                            if (userPurchasedGames.Contains(game.Id))
+                            {
+                                <span>✅ Acheté</span>
+                            }
+                            else
+                            {
+                                <form asp-action="Purchase" asp-controller="Home" method="post">
+                                    <input type="hidden" name="gameId" value="@game.Id" />
+                                    <button type="submit" class="btn btn-success">Acheter</button>
+                                </form>
+                            }
                         }
                         else
                         {
-                            <form asp-action="Purchase" asp-controller="Home" method="post">
-                                <input type="hidden" name="gameId" value="@game.Id" />
-                                <button type="submit" class="btn btn-success">Acheter</button>
-                            </form>
+                            <span>🔒 Connectez-vous pour acheter</span>
                         }
-                    }
-                    else
-                    {
-                        <span>🔒 Connectez-vous pour acheter</span>
-                    }
-                </td>
-
-            </tr>
-        }
-    </tbody>
-</table>
+                    </div>
+               </div>
+        </div>
+    }
+</div>
+                
