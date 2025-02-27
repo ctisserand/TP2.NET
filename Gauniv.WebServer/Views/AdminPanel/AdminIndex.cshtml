@@ -14,7 +14,6 @@
 <p>
     <a asp-action="Create">Create New</a>
     <a asp-controller="Category" asp-action="Index" class="btn btn-secondary">Gérer les catégories</a>
-    <a asp-controller="Games" asp-action="Index" class="btn btn-secondary">Gérer les jeux</a>
 
 </p>
 
@@ -27,7 +26,7 @@
                     Nom @(currentSort == "name_asc" ? "▲" : (currentSort == "name_desc" ? "▼" : ""))
                 </a>
             </th>
-            <th>Description</th>
+            
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@priceSort">
                     Prix @(currentSort == "price_asc" ? "▲" : (currentSort == "price_desc" ? "▼" : ""))
@@ -42,7 +41,7 @@
         {
             <tr>
                 <td>@game.Name</td>
-                <td>@game.Description</td>
+     
                 <td>@game.Price €</td>
                 <td>
                     @if (game.Categories != null && game.Categories.Any())

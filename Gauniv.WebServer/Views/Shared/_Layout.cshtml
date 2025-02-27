@@ -32,6 +32,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="swagger" asp-action="index">Swagger</a>
                         </li>
+                        @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Admin") &&
+                        !(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminPanel" &&
+                        ViewContext.RouteData.Values["action"]?.ToString() == "AdminIndex"))
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-danger text-white" href="@Url.Action("Index", "AdminPanel")">Admin Panel</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

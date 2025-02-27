@@ -24,8 +24,14 @@ namespace Gauniv.WebServer.Services
             using (var scope = serviceProvider.CreateScope()) // this will use `IServiceScopeFactory` internally
             {
                 applicationDbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                var userManager = scope.ServiceProvider.GetService<UserManager<User>>();
+                var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+                var signinManager = scope.ServiceProvider.GetService<SignInManager<User>>();
 
-                if(applicationDbContext is null)
+
+
+
+                if (applicationDbContext is null)
                 {
                     throw new Exception("ApplicationDbContext is null");
                 }
@@ -58,19 +64,78 @@ namespace Gauniv.WebServer.Services
 
                 if (!applicationDbContext.Users.Any())
                 {
+
                     var users = new List<User>
                     {
-                        new User { FirstName = "Alice", LastName = "Smith", Email = "alice@example.com", PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 1")! } },
-                        new User { FirstName = "Bob", LastName = "Johnson", Email = "bob@example.com", PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 2")!, applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 3")! } },
-                        new User { FirstName = "Charlie", LastName = "Brown", Email = "charlie@example.com", PurchasedGames = new List<Game>() },
-                        new User { FirstName = "Diana", LastName = "Miller", Email = "diana@example.com", PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 4")!, applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 5")!, applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 6")! } },
-                        new User { FirstName = "Edward", LastName = "Davis", Email = "edward@example.com", PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 7")! } }
+                        new User
+                            {
+                                UserName = "alice@example.com",
+                                FirstName = "Alice",
+                                LastName = "Smith",
+                                Email = "alice@example.com",
+                                PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 1")! }
+                            },
+                        new User
+                            {
+                                UserName = "bob@example.com",
+                                FirstName = "Bob",
+                                LastName = "Johnson",
+                                Email = "bob@example.com",
+                                PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 2")!, applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 3")! }
+                            },
+                        new User
+                            {   
+                                UserName = "charlie@example.com",
+                                FirstName = "Charlie",
+                                LastName = "Brown",
+                                Email = "charlie@example.com",
+                                PurchasedGames = new List<Game>()
+                            },
+                        new User
+                            {
+                                UserName = "diana@example.com",
+                                FirstName = "Diana",
+                                LastName = "Miller",
+                                Email = "diana@example.com",
+                                PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 4")!, applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 5")!, applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 6")! }
+                            },
+                        new User
+                            {
+                                UserName = "edward@example.com",
+                                FirstName = "Edward",
+                                LastName = "Davis",
+                                Email = "edward@example.com",
+                                PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 7")! }
+                            }
                     };
+
+                    if (!applicationDbContext.Roles.Any(r => r.Name == "Admin"))
+                    {
+                        roleManager.CreateAsync(new IdentityRole("Admin")).Wait();
+                    }
+                    if (!applicationDbContext.Roles.Any(r => r.Name == "User"))
+                    {
+                        roleManager.CreateAsync(new IdentityRole("User")).Wait();
+                    }
+
+                    foreach (var user in users)
+                    {
+                        userManager.CreateAsync(user,"password").Wait();
+                        userManager.AddToRoleAsync(user, "User").Wait();
+                    }
+                    
+                    userManager.AddToRoleAsync(users[0], "Admin").Wait();
 
                     applicationDbContext.Users.AddRange(users);
                     applicationDbContext.SaveChanges();
                 }
+                //var t0 = signinManager.PasswordSignInAsync("edward@example.com", "password", false, lockoutOnFailure: false);
+                //t0.Wait();
 
+                //var t1 = signinManager.CanSignInAsync(applicationDbContext.Users.First(x => x.Email == "edward@example.com"));
+                //t1.Wait();
+                //var t2 = signinManager.CheckPasswordSignInAsync(applicationDbContext.Users.First(x => x.Email == "edward@example.com"), "password",false);
+                //t2.Wait();
                 return Task.CompletedTask;
             }
         }
