@@ -31,6 +31,7 @@ namespace Gauniv.WebServer.Data
         // Facultatif : liste des utilisateurs ayant acheté ce jeu
         public ICollection<User> PurchasedByUsers { get; set; } = new List<User>();
 
+
     // Classe imbriquée Category
     public  class Category
         {

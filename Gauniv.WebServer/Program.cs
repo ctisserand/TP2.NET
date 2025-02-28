@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 // Set the culture so that the culture is the same between front and back
@@ -41,6 +44,23 @@ var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+// Ajout de l'authentification JWT
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+            // Ajoute ta clé secrète ou autre configuration nécessaire ici
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("votre_clé_secrète"))
+        };
+    });
 
 builder.Services.AddDefaultIdentity<User>(options => {
     options.SignIn.RequireConfirmedAccount = false;
@@ -146,6 +166,11 @@ app.MapGroup("Bearer").MapPost("/login", async Task<Results<Ok<AccessTokenRespon
             return TypedResults.Empty;
         })
 .WithOpenApi();
+
+
+app.UseAuthentication();  // Assurez-vous que l'authentification est bien activée
+app.UseAuthorization();
+
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/openapi/v1.json", "v1");
