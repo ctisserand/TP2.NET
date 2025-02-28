@@ -43,8 +43,7 @@ namespace Gauniv.WebServer.Data
             [MaxLength(100)]
             public string Name { get; set; }
 
-            // Relation inverse : facultative si besoin de naviguer de Category vers Game
-            public ICollection<Game> Games { get; set; } = new List<Game>();
+            public List<Game> Games { get; set; } // Liste des jeux associés à la catégorie
         }
     }
 }

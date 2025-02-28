@@ -38,6 +38,8 @@ builder.Services.Configure<RequestLocalizationOptions>(s =>
         cultureInfo
     ];
 });
+
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -45,22 +47,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Ajout de l'authentification JWT
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddCookie(options =>
     {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero,
-            // Ajoute ta clé secrète ou autre configuration nécessaire ici
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("votre_clé_secrète"))
-        };
+        options.LoginPath = "/Account/Login";  // chemin pour la page de connexion
+        options.LogoutPath = "/Account/Logout";  // chemin pour la déconnexion
     });
+
 
 builder.Services.AddDefaultIdentity<User>(options => {
     options.SignIn.RequireConfirmedAccount = false;
@@ -83,6 +76,29 @@ builder.Services.AddHostedService<OnlineService>();
 builder.Services.AddHostedService<SetupService>();
 // var redis = new  RedisService(redisConnectionString);
 // builder.Services.AddSingleton(redis);
+/*
+builder.Services.ConfigureApplicationCookie(o =>
+{
+    o.Events = new Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationEvents()
+    {
+        OnRedirectToLogin = (ctx) =>
+        {
+            if (ctx.Request.Path.StartsWithSegments("api") && ctx.Response.StatusCode == 200)
+            {
+                ctx.Response.StatusCode = 401;
+            }
+            return Task.CompletedTask;
+        },
+        OnRedirectToAccessDenied = (ctx) =>
+        {
+            if (ctx.Request.Path.StartsWithSegments("api") && ctx.Response.StatusCode == 200)
+            {
+                ctx.Response.StatusCode = 403;
+            }
+            return Task.CompletedTask;
+        }
+    };
+});*/
 
 var app = builder.Build();
 
@@ -170,6 +186,8 @@ app.MapGroup("Bearer").MapPost("/login", async Task<Results<Ok<AccessTokenRespon
 
 app.UseAuthentication();  // Assurez-vous que l'authentification est bien activée
 app.UseAuthorization();
+
+
 
 app.UseSwaggerUI(options =>
 {

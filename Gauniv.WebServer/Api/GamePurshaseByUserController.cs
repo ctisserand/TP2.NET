@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Gauniv.WebServer.Data;
 using Gauniv.WebServer.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Gauniv.WebServer.Api
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles = "Admin")]  // Limiter l'accès aux utilisateurs ayant le rôle "Admin"
     public class GamePurchaseByUserController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -27,6 +29,10 @@ namespace Gauniv.WebServer.Api
             [FromQuery] int limit = 10,
             [FromQuery] int? category = null)
         {
+            if (!this.User.Identity.IsAuthenticated)
+            {
+                return Unauthorized();
+            }
             // Récupérer l'utilisateur connecté (à partir du user authentifié)
             var userId = User.Identity.Name;  // Assure-toi que l'utilisateur est authentifié
             var user = await _context.Users

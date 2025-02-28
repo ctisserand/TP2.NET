@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
+using static Gauniv.WebServer.Data.Game;
 
 namespace Gauniv.WebServer.Services
 {
@@ -41,23 +42,123 @@ namespace Gauniv.WebServer.Services
                     applicationDbContext.Database.Migrate();
                 }
 
+                var categories = new List<string>
+                    {
+                        "Action", "Adventure", "Shooter", "RPG", "Strategy", "Puzzle", "Horror", "Survival", "Simulation", "MMO"
+                    };
+
+
+                // Insérer les catégories si elles n'existent pas déjà
+                foreach (var categoryName in categories)
+                {
+                    if (!applicationDbContext.Categories.Any(c => c.Name == categoryName))
+                    {
+                        applicationDbContext.Categories.Add(new Category { Name = categoryName });
+                    }
+                }
+
+                // Sauvegarder les catégories dans la base de données
+                applicationDbContext.SaveChanges();
+
+
+
+                // Chemin où se trouvent les fichiers des jeux
+                string baseDirectory = @"C:\Users\brieuc.mandin\Desktop\3A\MBDS\ServAppetEnvideDev";
                 // Ajouter ici les données que vous insérer dans votre DB au démarrage
                 if (!applicationDbContext.Games.Any())
                 {
                     var games = new List<Game>
                     {
-                        new Game { Name = "Game 1", Description = "Description for Game 1", Payload = new byte[0], Price = 19.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "Action" } } },
-                        new Game { Name = "Game 2", Description = "Description for Game 2", Payload = new byte[0], Price = 29.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "Adventure" } } },
-                        new Game { Name = "Game 3", Description = "Description for Game 3", Payload = new byte[0], Price = 14.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "RPG" } } },
-                        new Game { Name = "Game 4", Description = "Description for Game 4", Payload = new byte[0], Price = 9.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "Strategy" } } },
-                        new Game { Name = "Game 5", Description = "Description for Game 5", Payload = new byte[0], Price = 39.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "Shooter" } } },
-                        new Game { Name = "Game 6", Description = "Description for Game 6", Payload = new byte[0], Price = 24.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "Horror" } } },
-                        new Game { Name = "Game 7", Description = "Description for Game 7", Payload = new byte[0], Price = 34.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "Survival" } } },
-                        new Game { Name = "Game 8", Description = "Description for Game 8", Payload = new byte[0], Price = 44.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "Simulation" } } },
-                        new Game { Name = "Game 9", Description = "Description for Game 9", Payload = new byte[0], Price = 12.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "Puzzle" } } },
-                        new Game { Name = "Game 10", Description = "Description for Game 10", Payload = new byte[0], Price = 49.99m, Categories = new List<Game.Category>{ new Game.Category { Name = "MMO" } } },
+                        new Game
+                        {
+                            Name = "Game 1",
+                            Description = "Description for Game 1",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_1.exe")),  // Remplace "Game_1.exe" par ton fichier réel
+                            Price = 19.99m,
+                            Categories = new List<Category> { applicationDbContext.Categories.FirstOrDefault(c => c.Name == "Action") }
+                        },
+                        new Game
+                        {
+                            Name = "Game 2",
+                            Description = "Description for Game 2",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_2.exe")),  // Remplace "Game_2.exe" par ton fichier réel
+                            Price = 29.99m,
+                            Categories = new List<Category> { applicationDbContext.Categories.FirstOrDefault(c => c.Name == "Adventure") }
+                        },
+                        new Game
+                        {
+                            Name = "Game 3",
+                            Description = "Description for Game 3",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_3.exe")),  // Remplace "Game_3.exe" par ton fichier réel
+                            Price = 14.99m,
+                            Categories = new List<Category> { applicationDbContext.Categories.FirstOrDefault(c => c.Name == "RPG") }
+                        },
+                        new Game
+                        {
+                            Name = "Game 4",
+                            Description = "Description for Game 4",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_4.exe")),  // Remplace "Game_4.exe" par ton fichier réel
+                            Price = 9.99m,
+                            Categories = new List<Category> { applicationDbContext.Categories.FirstOrDefault(c => c.Name == "RPG") }
+                        },
+                        new Game
+                        {
+                            Name = "Game 5",
+                            Description = "Description for Game 5",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_5.exe")),  // Remplace "Game_5.exe" par ton fichier réel
+                            Price = 39.99m,
+                            Categories = new List<Category> {
+                                applicationDbContext.Categories.FirstOrDefault(c => c.Name == "Shooter"),
+                                applicationDbContext.Categories.FirstOrDefault(c => c.Name == "Action")
+                            }
+                        },
+                        new Game
+                        {
+                            Name = "Game 6",
+                            Description = "Description for Game 6",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_6.exe")),  // Remplace "Game_6.exe" par ton fichier réel
+                            Price = 24.99m,
+                            Categories = new List<Category> {
+                                applicationDbContext.Categories.FirstOrDefault(c => c.Name == "Horror"),
+                                applicationDbContext.Categories.FirstOrDefault(c => c.Name == "Survival")
+                            }
+                        },
+                        new Game
+                        {
+                            Name = "Game 7",
+                            Description = "Description for Game 7",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_7.exe")),  // Remplace "Game_7.exe" par ton fichier réel
+                            Price = 34.99m,
+                            Categories = new List<Category> { applicationDbContext.Categories.FirstOrDefault(c => c.Name == "Survival") }
+                        },
+                        new Game
+                        {
+                            Name = "Game 8",
+                            Description = "Description for Game 8",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_8.exe")),  // Remplace "Game_8.exe" par ton fichier réel
+                            Price = 44.99m,
+                            Categories = new List<Category> { applicationDbContext.Categories.FirstOrDefault(c => c.Name == "Simulation") }
+                        },
+                        new Game
+                        {
+                            Name = "Game 9",
+                            Description = "Description for Game 9",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_9.exe")),  // Remplace "Game_9.exe" par ton fichier réel
+                            Price = 12.99m,
+                            Categories = new List<Category> { applicationDbContext.Categories.FirstOrDefault(c => c.Name == "Puzzle") }
+                        },
+                        new Game
+                        {
+                            Name = "Game 10",
+                            Description = "Description for Game 10",
+                            Payload = File.ReadAllBytes(Path.Combine(baseDirectory, "Game_10.exe")),  // Remplace "Game_10.exe" par ton fichier réel
+                            Price = 49.99m,
+                            Categories = new List<Category> { applicationDbContext.Categories.FirstOrDefault(c => c.Name == "MMO") }
+                        }
                     };
 
+
+            
                     applicationDbContext.Games.AddRange(games);
                     applicationDbContext.SaveChanges();
                 }

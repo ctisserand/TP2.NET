@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using static Gauniv.WebServer.Data.Game;
 
 namespace Gauniv.WebServer.Data
 {
@@ -25,5 +26,7 @@ namespace Gauniv.WebServer.Data
                 .WithMany(g => g.PurchasedByUsers)  // Assumes you have a 'PurchasedByUsers' collection in Game
                 .UsingEntity(j => j.ToTable("GameUser"));  // Nom de la table de jointure
         }
+
+
     }
 }
