@@ -118,9 +118,9 @@ Sachant que :
 #### Administration
 
 -  Un administrateur peut :
-  - [ ]  Ajouter des jeux
-  - [ ]  Supprimer des jeux
-  - [ ]  Modifier un jeu
+  - [x]  Ajouter des jeux
+  - [x]  Supprimer des jeux
+  - [x]  Modifier un jeu
   - [x]  Ajouter de nouvelles catégories
   - [x]  Modifier une catégorie
   - [x]  Supprimer une catégorie
@@ -141,10 +141,10 @@ L'API doit permettre :
 
 - [ ]  S'authentifier
 - [ ]  Récupérer le binaire d'un jeu et le copier localement (sans charger l'ensemble du fichier en mémoire)
-- [ ]  Lister les catégories disponibles
-- [ ]  Lister les jeux (avec support des filtres et de la pagination)
+- [x]  Lister les catégories disponibles
+- [x]  Lister les jeux (avec support des filtres et de la pagination)
   - Exemple d'URL : `/game`, `/game?offset=10&limit=15`, `/game?category=3`, etc.
-- [ ]  Lister les jeux possédés (pour les utilisateurs connectés, avec filtres et pagination)
+- [x]  Lister les jeux possédés (pour les utilisateurs connectés, avec filtres et pagination)
 
 ### Application Client (WPF, MAUI ou WINUI)
 
