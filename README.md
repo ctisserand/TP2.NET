@@ -120,7 +120,7 @@ Sachant que :
 -  Un administrateur peut :
   - [x]  Ajouter des jeux
   - [x]  Supprimer des jeux
-  - [x]  Modifier un jeu
+  - [ ]  Modifier un jeu
   - [x]  Ajouter de nouvelles catégories
   - [x]  Modifier une catégorie
   - [x]  Supprimer une catégorie
@@ -129,7 +129,7 @@ Sachant que :
   - [x]  Consulter la liste des jeux possédés
   - [x]  Acheter un nouveau jeu
   - [x]  Voir les jeux possédés
-  - [x]  Consulter la liste des autres joueurs inscrits et leurs statuts en temps réel
+  - [ ]  Consulter la liste des autres joueurs inscrits et leurs statuts en temps réel
 
 -  Tout le monde peut :
   - [ ]  Consulter la liste de tous les jeux (avec filtrage par nom, prix, catégorie, etc.)
@@ -139,8 +139,8 @@ Sachant que :
 
 L'API doit permettre :
 
-- [ ]  S'authentifier
-- [ ]  Récupérer le binaire d'un jeu et le copier localement (sans charger l'ensemble du fichier en mémoire)
+- [x]  S'authentifier
+- [x]  Récupérer le binaire d'un jeu et le copier localement (sans charger l'ensemble du fichier en mémoire)
 - [x]  Lister les catégories disponibles
 - [x]  Lister les jeux (avec support des filtres et de la pagination)
   - Exemple d'URL : `/game`, `/game?offset=10&limit=15`, `/game?category=3`, etc.
