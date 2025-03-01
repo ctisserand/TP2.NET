@@ -63,7 +63,16 @@ namespace Gauniv.WebServer.Services
 
 
                 // Chemin où se trouvent les fichiers des jeux
-                string baseDirectory = @"C:\Users\brieuc.mandin\Desktop\3A\MBDS\ServAppetEnvideDev";
+                //string baseDirectory = @"C:\Users\brieuc.mandin\Desktop\3A\MBDS\ServAppetEnvideDev";
+
+                // Remonter depuis bin/Debug/net9.0 jusqu'à la racine du repo TP2_NET_BVH
+                string repoRoot = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.Parent.FullName;
+
+                // Ajouter "Games" pour obtenir le chemin correct
+                string baseDirectory = Path.Combine(repoRoot, "Games");
+
+
+
                 // Ajouter ici les données que vous insérer dans votre DB au démarrage
                 if (!applicationDbContext.Games.Any())
                 {
@@ -174,6 +183,7 @@ namespace Gauniv.WebServer.Services
                                 FirstName = "Alice",
                                 LastName = "Smith",
                                 Email = "alice@example.com",
+                                //IsOnline = false,
                                 PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 1")! }
                             },
                         new User
@@ -182,6 +192,7 @@ namespace Gauniv.WebServer.Services
                                 FirstName = "Bob",
                                 LastName = "Johnson",
                                 Email = "bob@example.com",
+                                //IsOnline = false,
                                 PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 2")!, applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 3")! }
                             },
                         new User
@@ -190,6 +201,7 @@ namespace Gauniv.WebServer.Services
                                 FirstName = "Charlie",
                                 LastName = "Brown",
                                 Email = "charlie@example.com",
+                                //IsOnline = false,
                                 PurchasedGames = new List<Game>()
                             },
                         new User
@@ -198,6 +210,7 @@ namespace Gauniv.WebServer.Services
                                 FirstName = "Diana",
                                 LastName = "Miller",
                                 Email = "diana@example.com",
+                                //IsOnline = false,
                                 PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 4")!, applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 5")!, applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 6")! }
                             },
                         new User
@@ -206,6 +219,7 @@ namespace Gauniv.WebServer.Services
                                 FirstName = "Edward",
                                 LastName = "Davis",
                                 Email = "edward@example.com",
+                                //IsOnline = false,
                                 PurchasedGames = new List<Game> { applicationDbContext.Games.FirstOrDefault(g => g.Name == "Game 7")! }
                             }
                     };

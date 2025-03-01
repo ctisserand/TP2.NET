@@ -17,6 +17,8 @@ namespace Gauniv.WebServer.Data
         // Relation many-to-many avec Game pour les achats
         public ICollection<Game> PurchasedGames { get; set; } = new List<Game>();
 
-
+      
     }
+
+
 }

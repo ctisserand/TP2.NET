@@ -10,6 +10,9 @@ namespace Gauniv.WebServer.Dtos
 
         // Liste des jeux possédés
         public List<GameDto> PurchasedGames { get; set; }
+
+        //public bool IsOnline { get; set; } // Ajout du champ avec valeur par défaut
     }
 }
+
 

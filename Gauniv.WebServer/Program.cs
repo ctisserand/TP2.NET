@@ -72,7 +72,8 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddSignalR();
-builder.Services.AddHostedService<OnlineService>();
+builder.Services.AddScoped<UserStatusService>(); // Si c'est un service qui doit être injecté dans les contrôleurs
+
 builder.Services.AddHostedService<SetupService>();
 // var redis = new  RedisService(redisConnectionString);
 // builder.Services.AddSingleton(redis);
