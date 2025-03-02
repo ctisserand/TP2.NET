@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 // Set the culture so that the culture is the same between front and back
@@ -35,12 +38,22 @@ builder.Services.Configure<RequestLocalizationOptions>(s =>
         cultureInfo
     ];
 });
+
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";  // chemin pour la page de connexion
+        options.LogoutPath = "/Account/Logout";  // chemin pour la déconnexion
+    });
+
 
 builder.Services.AddDefaultIdentity<User>(options => {
     options.SignIn.RequireConfirmedAccount = false;
@@ -59,10 +72,34 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddSignalR();
-builder.Services.AddHostedService<OnlineService>();
+builder.Services.AddScoped<UserStatusService>(); // Si c'est un service qui doit être injecté dans les contrôleurs
+
 builder.Services.AddHostedService<SetupService>();
 // var redis = new  RedisService(redisConnectionString);
 // builder.Services.AddSingleton(redis);
+/*
+builder.Services.ConfigureApplicationCookie(o =>
+{
+    o.Events = new Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationEvents()
+    {
+        OnRedirectToLogin = (ctx) =>
+        {
+            if (ctx.Request.Path.StartsWithSegments("api") && ctx.Response.StatusCode == 200)
+            {
+                ctx.Response.StatusCode = 401;
+            }
+            return Task.CompletedTask;
+        },
+        OnRedirectToAccessDenied = (ctx) =>
+        {
+            if (ctx.Request.Path.StartsWithSegments("api") && ctx.Response.StatusCode == 200)
+            {
+                ctx.Response.StatusCode = 403;
+            }
+            return Task.CompletedTask;
+        }
+    };
+});*/
 
 var app = builder.Build();
 
@@ -81,6 +118,7 @@ else
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();  
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -89,6 +127,25 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapControllerRoute(
+    name: "admin",
+    pattern: "{controller=AdminPanel}/{action=AdminIndex}/{id?}")
+    .WithStaticAssets();
+
+app.MapControllerRoute(
+    name: "SeeCategory",
+    pattern: "{controller=Category}/{action=See}/{id?}")
+    .WithStaticAssets();
+
+app.MapControllerRoute(
+    name: "Lybrary",
+    pattern: "{controller=Lybrary}/{action=LybraryIndex}/{id?}")
+    .WithStaticAssets();
+
+
+
+
 
 app.MapRazorPages()
    .WithStaticAssets();
@@ -126,6 +183,13 @@ app.MapGroup("Bearer").MapPost("/login", async Task<Results<Ok<AccessTokenRespon
             return TypedResults.Empty;
         })
 .WithOpenApi();
+
+
+app.UseAuthentication();  // Assurez-vous que l'authentification est bien activée
+app.UseAuthorization();
+
+
+
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/openapi/v1.json", "v1");

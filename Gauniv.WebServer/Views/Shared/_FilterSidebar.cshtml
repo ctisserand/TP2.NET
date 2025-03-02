@@ -1,0 +1,126 @@
+﻿@using static Gauniv.WebServer.Data.Game
+
+<div id="filterSidebar" class="filter-sidebar">
+    <form id="filterForm" action="@Url.Action("Index", "Home")" method="get">
+        <div class="form-group">
+            <label for="nameFilter">Nom du jeu</label>
+            <input type="text" id="nameFilter" name="name" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="minPrice">Prix minimum</label>
+            <input type="number" id="minPrice" name="minPrice" class="form-control" step="0.01">
+        </div>
+
+        <div class="form-group">
+            <label for="maxPrice">Prix maximum</label>
+            <input type="number" id="maxPrice" name="maxPrice" class="form-control" step="0.01">
+        </div>
+
+        <!-- Champ caché pour envoyer les catégories sélectionnées -->
+        <input type="hidden" id="selectedCategoriesInput" name="selectedCategories">
+
+        <!-- Zone où s'affichent les catégories sélectionnées -->
+        <div id="selectedCategories" class="mt-2">
+            <strong>Catégories sélectionnées :</strong>
+            <ul id="selectedCategoriesList" class="list-unstyled"></ul>
+
+        </div>
+
+        <div class="form-group">
+            <label for="categoryFilter">Catégorie</label>
+            <select id="categoryFilter" name="category" class="form-control">
+                <option value="">Toutes</option>
+                @foreach (var category in ViewData["Categories"] as List<Category>)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    let selectedCategories = new Set(); // Utilisation d'un Set pour éviter les doublons
+                    const categoryFilter = document.getElementById("categoryFilter");
+                    const selectedCategoriesList = document.getElementById("selectedCategoriesList");
+
+                    categoryFilter.addEventListener("change", function () {
+                        const selectedOptions = Array.from(categoryFilter.selectedOptions);
+
+                        selectedOptions.forEach(option => {
+                            if (option.value && !selectedCategories.has(option.value)) {
+                                selectedCategories.add(option.value);
+
+                                // Ajouter un élément dans la liste affichée
+                                const li = document.createElement("li");
+                                li.textContent = option.text;
+                                li.dataset.value = option.value;
+
+                                // Ajout d'un bouton pour supprimer une catégorie
+                                const removeBtn = document.createElement("button");
+                                removeBtn.textContent = "❌";
+                                removeBtn.style.marginLeft = "10px";
+                                removeBtn.style.cursor = "pointer";
+
+                                            removeBtn.addEventListener("click", function () {
+                                    selectedCategories.delete(option.value);
+                                    li.remove();
+                                    // Retirer l'option sélectionnée dans le <select>
+                                    categoryFilter.querySelector(`option[value='${option.value}']`).selected = false;
+
+                                    // Mettre à jour le champ caché
+                                    updateSelectedCategoriesInput();
+                                });
+
+                                li.appendChild(removeBtn);
+                                selectedCategoriesList.appendChild(li);
+                            }
+                        });
+
+                        // Mettre à jour le champ caché
+                        updateSelectedCategoriesInput();
+                    });
+
+                    // Fonction pour mettre à jour le champ caché avec les catégories sélectionnées
+                    function updateSelectedCategoriesInput() {
+                        selectedCategoriesInput.value = Array.from(selectedCategories).join(',');
+                    }
+                });
+            </script>
+
+        </div>
+
+        <button type="submit" class="btn btn-success">Appliquer</button>
+    </form>
+
+</div>
+<style>
+    .filter-sidebar {
+        position: fixed;
+        left: -300px;
+        top: 70px; /* Ajuste en fonction de la hauteur de ton header */
+        width: 300px;
+        height: calc(100vh - 140px); /* 100% de la hauteur de l'écran moins le header et le footer */
+        background: white;
+        box-shadow: 2px 0px 5px rgba(0,0,0,0.2);
+        padding: 20px;
+        transition: left 0.3s ease-in-out;
+        overflow-y: auto; /* Permet le scroll si le contenu dépasse */
+    }
+
+        .filter-sidebar.open {
+            left: 0;
+        }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        float: right;
+        cursor: pointer;
+    }
+
+    
+
+
+
+</style>
+

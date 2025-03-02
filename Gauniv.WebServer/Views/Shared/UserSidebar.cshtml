@@ -1,0 +1,165 @@
+﻿<div id="userSidebar" class="user-sidebar">
+    <button id="closeUserSidebar" class="close-btn">&times;</button>
+    <h3>Utilisateurs</h3>
+    <ul id="userList" class="user-list">
+        <!-- Les utilisateurs seront ajoutés ici dynamiquement -->
+    </ul>
+</div>
+
+<!-- Demi-cercle pour ouvrir la sidebar -->
+<div id="userSidebarToggle" class="sidebar-toggle">
+    ⇨
+</div>
+<style>
+    /* Sidebar utilisateur */
+    .user-sidebar {
+        position: fixed;
+        right: -300px;
+        top: 70px;
+        width: 300px;
+        height: calc(100vh - 140px);
+        background: #171a21; /* Gris foncé typique de Steam */
+        color: #d3d6db; /* Texte clair pour contraster avec le fond sombre */
+        box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        transition: right 0.3s ease-in-out;
+        overflow-y: auto;
+        border-radius: 10px 0 0 10px;
+    }
+
+        .user-sidebar.open {
+            right: 0;
+        }
+
+    /* Bouton de fermeture */
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #d3d6db; /* Couleur claire pour le bouton */
+        float: right;
+        cursor: pointer;
+    }
+
+        .close-btn:hover {
+            color: #2a9d8f; /* Vert typique de Steam au survol */
+        }
+
+    /* Liste des utilisateurs */
+    .user-list {
+        list-style: none;
+        padding: 0;
+    }
+
+        .user-list li {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #444; /* Gris plus clair pour la séparation */
+        }
+
+    .user-status {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .online {
+        background-color: #2a9d8f; /* Vert Steam */
+    }
+
+    .offline {
+        background-color: #9e9e9e; /* Gris clair pour les hors ligne */
+    }
+
+    /* Demi-cercle pour ouvrir la sidebar */
+    .sidebar-toggle {
+        position: fixed;
+        right: 0;
+        top: 50%;
+        width: 40px;
+        height: 80px;
+        background: #171a21; /* Même fond sombre que la sidebar */
+        border-radius: 20px 0 0 20px;
+        box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: right 0.3s ease-in-out;
+    }
+
+        .sidebar-toggle.open {
+            right: 300px;
+        }
+
+        .sidebar-toggle:hover {
+            background: #2a9d8f; /* Vert Steam au survol */
+        }
+
+</style>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const userSidebar = document.getElementById("userSidebar");
+        const userSidebarToggle = document.getElementById("userSidebarToggle");
+        const closeUserSidebar = document.getElementById("closeUserSidebar");
+
+        // Fonction pour ouvrir la sidebar
+        function openSidebar() {
+            userSidebar.classList.add("open");
+            userSidebarToggle.classList.add("open");
+            userSidebarToggle.innerHTML = "⇦"; // Change l'icône
+        }
+
+        // Fonction pour fermer la sidebar
+        function closeSidebar() {
+            userSidebar.classList.remove("open");
+            userSidebarToggle.classList.remove("open");
+            userSidebarToggle.innerHTML = "⇨"; // Change l'icône
+        }
+
+        // Toggle de la sidebar
+        userSidebarToggle.addEventListener("click", function () {
+            if (userSidebar.classList.contains("open")) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
+        closeUserSidebar.addEventListener("click", closeSidebar);
+
+        // Chargement des utilisateurs (Exemple de récupération via API)
+        function loadUsers() {
+            fetch("/api/users") // Remplace par ton endpoint API
+                .then(response => response.json())
+                .then(users => {
+                    const userList = document.getElementById("userList");
+                    userList.innerHTML = "";
+
+                    users.forEach(user => {
+                        const li = document.createElement("li");
+
+                        // Ajout du statut (vert = en ligne, rouge = hors ligne)
+                        const status = document.createElement("span");
+                        status.classList.add("user-status", user.isOnline ? "online" : "offline");
+
+                        // Ajout du nom d'utilisateur
+                        const username = document.createElement("span");
+                        username.textContent = user.name;
+
+                        li.appendChild(status);
+                        li.appendChild(username);
+                        userList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error("Erreur lors du chargement des utilisateurs :", error));
+        }
+
+        // Charger la liste des utilisateurs au chargement de la page
+        loadUsers();
+    });
+</script>

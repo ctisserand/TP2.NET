@@ -1,0 +1,91 @@
+﻿@model Gauniv.WebServer.Dtos.EditGameDTO
+
+@{
+    ViewData["Title"] = "Modifier le jeu";
+}
+
+<h1>Modifier le jeu</h1>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price" class="control-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Payload (fichier binaire)</label>
+        <input type="file" name="Payload" class="form-control" />
+        <small class="form-text text-muted">Laisser vide pour ne pas changer le fichier existant.</small>
+    </div>
+    <div class="form-group">
+        <label>Catégories</label>
+        <!-- Champ pour l'autocomplétion -->
+        <input id="category-input" type="text" class="form-control" placeholder="Tapez une catégorie..." />
+        <!-- Liste pour afficher les catégories sélectionnées -->
+        <ul id="selected-categories">
+            @foreach (var cat in Model.Categories)
+            {
+                <li>
+                    @cat
+                    <button type="button" class="remove-category btn btn-sm btn-danger">x</button>
+                    <input type="hidden" name="Categories" value="@cat" />
+                </li>
+            }
+        </ul>
+    </div>
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    @{
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+
+        <script>
+            $(function () {
+                // Initialisation de l'autocomplétion pour le champ catégorie
+                $("#category-input").autocomplete({
+                    source: '@Url.Action("AutocompleteCategories", "Category")',
+                    minLength: 2,
+                    select: function (event, ui) {
+                        var selectedCategory = ui.item.value;
+                        // Vérifier si la catégorie n'est pas déjà ajoutée
+                        if ($("#selected-categories input[value='" + selectedCategory + "']").length === 0) {
+                            $("#selected-categories").append(
+                                "<li>" + selectedCategory +
+                                " <button type='button' class='remove-category btn btn-sm btn-danger'>x</button>" +
+                                "<input type='hidden' name='Categories' value='" + selectedCategory + "' /></li>"
+                            );
+                        }
+                        // Effacer le champ après sélection
+                        $(this).val('');
+                        return false;
+                    }
+                });
+
+                // Gestion de la suppression des catégories : lorsqu'on clique sur le bouton "x",
+                // supprimer l'élément li correspondant
+                $("#selected-categories").on("click", ".remove-category", function(){
+                    $(this).closest("li").remove();
+                });
+            });
+        </script>
+    }
+}
