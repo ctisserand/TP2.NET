@@ -275,14 +275,10 @@ Le jeu se joue sur un damier N*N.
 7. Pour chaque joueur, le serveur vérifie que la participation du joueur est valide grâce à la fonction ci-dessous. Si le joueur est exclu, la position de tous les joueurs doit être mise à jour en conséquence.
 8. Le serveur communique le résultat final à tout le monde.
 
-## Le joueur
+## Option
 
 - Un joueur doit être authentifié par login / mot de passe auprès du serveur d’identification.
   - Le serveur d’authentification doit retourner un token prouvant l’authentification.
-- Un joueur est composé d’un nom et d’un token d’authentification.
-
-## Option
-
 - Le serveur sait gérer plusieurs parties en même temps (et donc il sait gérer des salons).
 - Séparer la partie serveur de la partie jeu :
   - Le serveur est générique et charge des plugins, chaque plugin est un jeu.
